@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Invoice - PT WIJAYA ANUGRAH TEKNIK</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
+.container {
+    max-width: 900px;
+    background: #fff;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.header {
+    display: flex;
+    align-items: center;
+}
+.header img {
+    width: 90px;
+    margin-right: 15px;
+}
+.header h2 {
+    margin: 0;
+}
+hr {
+    margin: 20px 0;
+}
+input {
+    width: 100%;
+    padding: 6px;
+    margin: 4px 0;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+table, th, td {
+    border: 1px solid #ccc;
+}
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+.total {
+    text-align: right;
+    font-size: 18px;
+    margin-top: 10px;
+}
+button {
+    padding: 8px 12px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+}
+.add {
+    background: #6c757d;
+    color: white;
+}
+.print {
+    background: #007bff;
+    color: white;
+}
+.wa {
+    background: #25d366;
+    color: white;
+}
+</style>
+</head>
+
+<body onload="generateInvoiceNo()">
+
+<div class="container" id="invoice">
+
+<div class="header">
+    <img src="logo.png">
+    <div>
+        <h2>PT WIJAYA ANUGRAH TEKNIK</h2>
+        <small>Jasa Service & Instalasi AC</small>
+    </div>
+</div>
+
+<hr>
+
+<p><b>No Invoice:</b> <span id="invoiceNo"></span></p>
+
+<p>
+Tanggal:
+<input type="date" id="tanggal">
+</p>
+
+<p>
+Nama Pelanggan:
+<input type="text" id="nama">
+</p>
+
+<table id="itemTable">
+<thead>
+<tr>
+<th>Deskripsi Pekerjaan</th>
+<th>Qty</th>
+<th>Harga</th>
+<th>Total</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><input type="text" class="desk" placeholder="Service AC Split"></td>
+<td><input type="number" class="qty" value="1" onchange="hitung()"></td>
+<td><input type="number" class="harga" onchange="hitung()"></td>
+<td class="totalRow">Rp 0</td>
+<td><button onclick="hapusRow(this)">❌</button></td>
+</tr>
+</tbody>
+</table>
+
+<button class="add" onclick="tambahItem()">➕ Tambah Item</button>
+
+<div class="total">
+<b>Total Bayar: <span id="grandTotal">Rp 0</span></b>
+</div>
+
+<button class="print" onclick="window.print()">🖨️ Save / Print PDF</button>
+<button class="wa" onclick="shareWA()">📲 Kirim WhatsApp</button>
+
+</div>
+
+<script>
+// ============================
+// NOMOR INVOICE OTOMATIS
+// ============================
+function generateInvoiceNo() {
+    let no = localStorage.getItem("counterInv");
+    no = no ? parseInt(no) + 1 : 1;
+    localStorage.setItem("counterInv", no);
+
+    const d = new Date();
+    const bulan = String(d.getMonth() + 1).padStart(2, '0');
+    const tahun = d.getFullYear();
+    const nomor = String(no).padStart(3, '0');
+
+    document.getElementById("invoiceNo").innerText =
+        `${nomor}/INV/WAT/${bulan}/${tahun}`;
+
+    document.getElementById("tanggal").value =
+        d.toISOString().split("T")[0];
+}
+
+// ============================
+// TAMBAH ITEM
+// ============================
+function tambahItem() {
+    const table = document.querySelector("#itemTable tbody");
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <td><input type="text" class="desk"></td>
+        <td><input type="number" class="qty" value="1" onchange="hitung()"></td>
+        <td><input type="number" class="harga" onchange="hitung()"></td>
+        <td class="totalRow">Rp 0</td>
+        <td><button onclick="hapusRow(this)">❌</button></td>
+    `;
+    table.appendChild(row);
+}
+
+// ============================
+// HAPUS ITEM
+// ============================
+function hapusRow(btn) {
+    btn.parentElement.parentElement.remove();
+    hitung();
+}
+
+// ============================
+// HITUNG TOTAL
+// ============================
+function hitung() {
+    let grandTotal = 0;
+    const rows = document.querySelectorAll("#itemTable tbody tr");
+
+    rows.forEach(row => {
+        const qty = row.querySelector(".qty").value || 0;
+        const harga = row.querySelector(".harga").value || 0;
+        const total = qty * harga;
+
+        row.querySelector(".totalRow").innerText =
+            "Rp " + total.toLocaleString("id-ID");
+
+        grandTotal += total;
+    });
+
+    document.getElementById("grandTotal").innerText =
+        "Rp " + grandTotal.toLocaleString("id-ID");
+}
+
+// ============================
+// SHARE WHATSAPP (SEMUA ITEM)
+// ============================
+function shareWA() {
+    const inv = document.getElementById("invoiceNo").innerText;
+    const tgl = document.getElementById("tanggal").value;
+    const nama = document.getElementById("nama").value;
+
+    if (!nama) {
+        alert("Nama pelanggan wajib diisi");
+        return;
+    }
+
+    let rincian = "";
+    const rows = document.querySelectorAll("#itemTable tbody tr");
+
+    rows.forEach((row, i) => {
+        const desk = row.querySelector(".desk").value;
+        const qty = row.querySelector(".qty").value;
+        const harga = row.querySelector(".harga").value;
+        const total = qty * harga;
+
+        if (desk && harga) {
+            rincian += `${i+1}. ${desk}\n   Qty   : ${qty}\n   Harga : Rp ${Number(harga).toLocaleString("id-ID")}\n   Total : Rp ${total.toLocaleString("id-ID")}\n\n`;
+        }
+    });
+
+    const totalBayar = document.getElementById("grandTotal").innerText;
+
+    const pesan =
+`INVOICE RESMI
+PT WIJAYA ANUGRAH TEKNIK
+
+No Invoice : ${inv}
+Tanggal    : ${tgl}
+Pelanggan  : ${nama}
+
+RINCIAN PEKERJAAN:
+${rincian}
+TOTAL BAYAR:
+${totalBayar}
+
+Terima kasih telah menggunakan jasa kami.
+📞 0811-8011-436`;
+
+    const url = "https://wa.me/?text=" + encodeURIComponent(pesan);
+    window.open(url, "_blank");
+}
+</script>
+
+</body>
+</html>
