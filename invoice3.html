@@ -1,253 +1,235 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Invoice - PT WIJAYA ANUGRAH TEKNIK</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Invoice PT Wijaya Anugrah Teknik</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f2f2f2;
+:root{
+  --biru:#0b5ed7;
+  --kuning:#ffc107;
 }
-.container {
-    max-width: 900px;
-    background: #fff;
-    margin: 20px auto;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-.header {
-    display: flex;
-    align-items: center;
-}
-.header img {
-    width: 90px;
-    margin-right: 15px;
-}
-.header h2 {
-    margin: 0;
-}
-hr {
-    margin: 20px 0;
-}
-input {
-    width: 100%;
-    padding: 6px;
-    margin: 4px 0;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-table, th, td {
-    border: 1px solid #ccc;
-}
-th, td {
-    padding: 8px;
-    text-align: center;
-}
-.total {
-    text-align: right;
-    font-size: 18px;
-    margin-top: 10px;
-}
-button {
-    padding: 8px 12px;
-    margin-top: 10px;
-    border: none;
-    cursor: pointer;
-}
-.add {
-    background: #6c757d;
-    color: white;
-}
-.print {
-    background: #007bff;
-    color: white;
-}
-.wa {
-    background: #25d366;
-    color: white;
+body{font-family:Arial,sans-serif;background:#f2f2f2;padding:20px;}
+.invoice{background:#fff;max-width:960px;margin:auto;padding:30px;position:relative;border-top:8px solid var(--biru);}
+.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:44px;font-weight:bold;color:rgba(0,0,0,.06);text-align:center;pointer-events:none;user-select:none;}
+.kop{display:flex;align-items:center;border-bottom:4px solid var(--kuning);padding-bottom:15px;}
+.kop img{width:110px;margin-right:15px;}
+.kop h2{margin:0;color:var(--biru);}
+.kop small{font-size:13px;}
+table{width:100%;border-collapse:collapse;margin-top:15px;}
+th,td{border:1px solid #000;padding:7px;}
+th{background:var(--biru);color:#fff;}
+input,textarea{width:100%;border:1px solid #ccc;padding:6px;}
+.total{text-align:right;font-size:20px;font-weight:bold;color:var(--biru);margin-top:15px;}
+.footer{margin-top:25px;font-size:13px;}
+.ttd{margin-top:40px;text-align:right;}
+button{padding:8px 14px;margin:5px;}
+@media print{
+  body{background:#fff;}
+  button{display:none;}
+  input,textarea{border:none;padding:0;font-size:13px;resize:none;}
 }
 </style>
 </head>
 
-<body onload="generateInvoiceNo()">
+<body>
+<div class="invoice">
+  <div class="watermark">PT WIJAYA ANUGRAH TEKNIK<br/>OFFICIAL INVOICE</div>
 
-<div class="container" id="invoice">
-
-<div class="header">
-    <img src="logo.png">
+  <!-- KOP -->
+  <div class="kop">
+    <img src="logo.png" />
     <div>
-        <h2>PT WIJAYA ANUGRAH TEKNIK</h2>
-        <small>Jasa Service & Instalasi AC</small>
+      <h2>PT WIJAYA ANUGRAH TEKNIK</h2>
+      <small>Spesialis Sistem Pendingin<br/>(Perbaikan, Perawatan, Pengadaan Unit)</small>
     </div>
-</div>
+  </div>
 
-<hr>
+  <h3 style="text-align:center;">INVOICE & LAPORAN PEKERJAAN</h3>
 
-<p><b>No Invoice:</b> <span id="invoiceNo"></span></p>
+  <!-- INFO -->
+  <table>
+    <tr>
+      <td>No Invoice</td><td id="noInv"></td>
+      <td>Tanggal</td><td id="tgl"></td>
+    </tr>
+    <tr>
+      <td>Pelanggan</td><td><input id="pelanggan" /></td>
+      <td>No HP</td><td><input id="hp" type="tel" placeholder="08xxxxxxxxxx" /></td>
+    </tr>
+  </table>
 
-<p>
-Tanggal:
-<input type="date" id="tanggal">
-</p>
+  <!-- ITEM -->
+  <table id="items">
+    <thead>
+      <tr>
+        <th>Deskripsi Pekerjaan</th><th>Qty</th><th>Harga</th><th>Total</th><th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button onclick="tambahItem()">+ Tambah Item</button>
 
-<p>
-Nama Pelanggan:
-<input type="text" id="nama">
-</p>
+  <div class="total">TOTAL TAGIHAN: Rp <span id="grand">0</span></div>
 
-<table id="itemTable">
-<thead>
-<tr>
-<th>Deskripsi Pekerjaan</th>
-<th>Qty</th>
-<th>Harga</th>
-<th>Total</th>
-<th>Aksi</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><input type="text" class="desk" placeholder="Service AC Split"></td>
-<td><input type="number" class="qty" value="1" onchange="hitung()"></td>
-<td><input type="number" class="harga" onchange="hitung()"></td>
-<td class="totalRow">Rp 0</td>
-<td><button onclick="hapusRow(this)">❌</button></td>
-</tr>
-</tbody>
-</table>
+  <!-- REPORT AC -->
+  <h3 style="margin-top:30px;color:var(--biru);">REPORT HASIL PENGERJAAN AC</h3>
+  <table id="reportAC">
+    <thead>
+      <tr>
+        <th>Lokasi AC</th><th>Freon Sebelum</th><th>Freon Sesudah</th>
+        <th>Ampere Sebelum</th><th>Ampere Sesudah</th><th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button onclick="tambahReport()">+ Tambah Unit AC</button>
 
-<button class="add" onclick="tambahItem()">➕ Tambah Item</button>
+  <!-- CATATAN -->
+  <h3 style="margin-top:30px;color:var(--biru);">CATATAN UNTUK CUSTOMER</h3>
+  <textarea id="catatan" rows="4" placeholder="Contoh: Disarankan service rutin setiap 3 bulan."></textarea>
 
-<div class="total">
-<b>Total Bayar: <span id="grandTotal">Rp 0</span></b>
-</div>
+  <!-- PEMBAYARAN -->
+  <div class="footer">
+    <b>Pembayaran:</b><br/>
+    Transfer Bank BCA<br/>
+    No Rek: <b>2190116851</b><br/>
+    a.n <b>Roni Wijaya</b>
+  </div>
 
-<button class="print" onclick="window.print()">🖨️ Save / Print PDF</button>
-<button class="wa" onclick="shareWA()">📲 Kirim WhatsApp</button>
+  <!-- GARANSI -->
+  <div class="footer">
+    <b>Catatan Garansi:</b><br/>
+    • Garansi jasa service 14 hari<br/>
+    • Garansi material 30 hari
+  </div>
 
+  <!-- TTD -->
+  <div class="ttd">
+    Hormat Kami,<br/><br/><br/>
+    <b>(Tanda Tangan Digital)</b><br/>Manager Finance
+  </div>
+
+  <!-- ALAMAT -->
+  <div class="footer">
+    <hr/>
+    <b>Office:</b> Jl. H. Rean, Benda Baru, Pamulang, Tangerang Selatan<br/>
+    <b>Gudang:</b> Perumahan Britania Hills Lite Blok N7, Rawakalong, Bogor, Jawa Barat<br/>
+    <b>Telp:</b> 0811-8011-436
+  </div>
+
+  <div style="text-align:center;">
+    <button onclick="window.print()">Simpan PDF</button>
+    <button onclick="kirimWA()">Kirim WhatsApp</button>
+    <button onclick="rekapBulanan()">Rekap Bulanan</button>
+  </div>
 </div>
 
 <script>
-// ============================
-// NOMOR INVOICE OTOMATIS
-// ============================
-function generateInvoiceNo() {
-    let no = localStorage.getItem("counterInv");
-    no = no ? parseInt(no) + 1 : 1;
-    localStorage.setItem("counterInv", no);
+/* ===== INVOICE OTOMATIS ===== */
+const d=new Date();
+const key=d.toISOString().split("T")[0];
+document.getElementById("tgl").innerText=key;
+let n=localStorage.getItem("INV_"+key); n=n?parseInt(n)+1:1; localStorage.setItem("INV_"+key,n);
+const noInv=String(n).padStart(3,"0")+"/INV/WAT/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear();
+document.getElementById("noInv").innerText=noInv;
 
-    const d = new Date();
-    const bulan = String(d.getMonth() + 1).padStart(2, '0');
-    const tahun = d.getFullYear();
-    const nomor = String(no).padStart(3, '0');
+/* ===== ITEM ===== */
+function tambahItem(){
+  const tr=document.createElement("tr");
+  tr.innerHTML=`<td><input></td><td><input type="number" value="1"></td>
+  <td><input type="number" value="0"></td><td class="line">0</td>
+  <td><button onclick="this.closest('tr').remove();hitung()">❌</button></td>`;
+  document.querySelector("#items tbody").appendChild(tr);
+}
+tambahItem();
 
-    document.getElementById("invoiceNo").innerText =
-        `${nomor}/INV/WAT/${bulan}/${tahun}`;
+function hitung(){
+  let total=0;
+  document.querySelectorAll("#items tbody tr").forEach(r=>{
+    const q=+r.children[1].children[0].value||0;
+    const h=+r.children[2].children[0].value||0;
+    const t=q*h; r.querySelector(".line").innerText=t; total+=t;
+  });
+  document.getElementById("grand").innerText=total;
+}
+document.addEventListener("input",hitung);
 
-    document.getElementById("tanggal").value =
-        d.toISOString().split("T")[0];
+/* ===== REPORT AC ===== */
+function tambahReport(){
+  const tr=document.createElement("tr");
+  tr.innerHTML=`<td><input></td><td><input></td><td><input></td>
+  <td><input></td><td><input></td>
+  <td><button onclick="this.closest('tr').remove()">❌</button></td>`;
+  document.querySelector("#reportAC tbody").appendChild(tr);
+}
+tambahReport();
+
+/* ===== SIMPAN REKAP ===== */
+function simpanRekap(){
+  let data=JSON.parse(localStorage.getItem("REKAP_INVOICE")||"[]");
+  data.push({tanggal:key,bulan:key.slice(0,7),invoice:noInv,total:+grand.innerText});
+  localStorage.setItem("REKAP_INVOICE",JSON.stringify(data));
 }
 
-// ============================
-// TAMBAH ITEM
-// ============================
-function tambahItem() {
-    const table = document.querySelector("#itemTable tbody");
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-        <td><input type="text" class="desk"></td>
-        <td><input type="number" class="qty" value="1" onchange="hitung()"></td>
-        <td><input type="number" class="harga" onchange="hitung()"></td>
-        <td class="totalRow">Rp 0</td>
-        <td><button onclick="hapusRow(this)">❌</button></td>
-    `;
-    table.appendChild(row);
+/* ===== REKAP BULANAN ===== */
+function rekapBulanan(){
+  let data=JSON.parse(localStorage.getItem("REKAP_INVOICE")||"[]");
+  if(!data.length){alert("Belum ada data.");return;}
+  let map={};
+  data.forEach(d=>{
+    map[d.bulan]=map[d.bulan]||{jumlah:0,total:0};
+    map[d.bulan].jumlah++; map[d.bulan].total+=d.total;
+  });
+  let out="REKAP PENDAPATAN BULANAN\n\n";
+  Object.keys(map).sort().forEach(b=>{
+    out+=`Bulan: ${b}\nJumlah Invoice: ${map[b].jumlah}\nTotal: Rp ${map[b].total}\n\n`;
+  });
+  alert(out);
 }
 
-// ============================
-// HAPUS ITEM
-// ============================
-function hapusRow(btn) {
-    btn.parentElement.parentElement.remove();
-    hitung();
-}
-
-// ============================
-// HITUNG TOTAL
-// ============================
-function hitung() {
-    let grandTotal = 0;
-    const rows = document.querySelectorAll("#itemTable tbody tr");
-
-    rows.forEach(row => {
-        const qty = row.querySelector(".qty").value || 0;
-        const harga = row.querySelector(".harga").value || 0;
-        const total = qty * harga;
-
-        row.querySelector(".totalRow").innerText =
-            "Rp " + total.toLocaleString("id-ID");
-
-        grandTotal += total;
-    });
-
-    document.getElementById("grandTotal").innerText =
-        "Rp " + grandTotal.toLocaleString("id-ID");
-}
-
-// ============================
-// SHARE WHATSAPP (SEMUA ITEM)
-// ============================
-function shareWA() {
-    const inv = document.getElementById("invoiceNo").innerText;
-    const tgl = document.getElementById("tanggal").value;
-    const nama = document.getElementById("nama").value;
-
-    if (!nama) {
-        alert("Nama pelanggan wajib diisi");
-        return;
-    }
-
-    let rincian = "";
-    const rows = document.querySelectorAll("#itemTable tbody tr");
-
-    rows.forEach((row, i) => {
-        const desk = row.querySelector(".desk").value;
-        const qty = row.querySelector(".qty").value;
-        const harga = row.querySelector(".harga").value;
-        const total = qty * harga;
-
-        if (desk && harga) {
-            rincian += `${i+1}. ${desk}\n   Qty   : ${qty}\n   Harga : Rp ${Number(harga).toLocaleString("id-ID")}\n   Total : Rp ${total.toLocaleString("id-ID")}\n\n`;
-        }
-    });
-
-    const totalBayar = document.getElementById("grandTotal").innerText;
-
-    const pesan =
+/* ===== WHATSAPP (RINCIAN + REKENING) ===== */
+function kirimWA(){
+  simpanRekap();
+  let pesan=
 `INVOICE RESMI
 PT WIJAYA ANUGRAH TEKNIK
 
-No Invoice : ${inv}
-Tanggal    : ${tgl}
-Pelanggan  : ${nama}
+No Invoice : ${noInv}
+Tanggal    : ${key}
+Pelanggan  : ${pelanggan.value}
 
 RINCIAN PEKERJAAN:
-${rincian}
-TOTAL BAYAR:
-${totalBayar}
-
-Terima kasih telah menggunakan jasa kami.
-📞 0811-8011-436`;
-
-    const url = "https://wa.me/?text=" + encodeURIComponent(pesan);
-    window.open(url, "_blank");
+`;
+  let i=1;
+  document.querySelectorAll("#items tbody tr").forEach(r=>{
+    const d=r.children[0].children[0].value;
+    const q=r.children[1].children[0].value;
+    const h=r.children[2].children[0].value;
+    const t=r.children[3].innerText;
+    if(d){pesan+=`${i}. ${d}\n   Qty ${q} x Rp ${h} = Rp ${t}\n`; i++;}
+  });
+  pesan+=`\nTOTAL TAGIHAN : Rp ${grand.innerText}\n\nREPORT HASIL PEKERJAAN AC:\n`;
+  document.querySelectorAll("#reportAC tbody tr").forEach(r=>{
+    const l=r.children[0].children[0].value;
+    const f1=r.children[1].children[0].value;
+    const f2=r.children[2].children[0].value;
+    const a1=r.children[3].children[0].value;
+    const a2=r.children[4].children[0].value;
+    if(l){pesan+=`- ${l} | Freon ${f1} → ${f2} PSI | Ampere ${a1} → ${a2} A\n`;}
+  });
+  pesan+=`
+INFORMASI PEMBAYARAN:
+Bank BCA
+No Rekening : 2190116851
+a.n Roni Wijaya
+`;
+  if(catatan.value){pesan+=`\nCatatan:\n${catatan.value}\n`;}
+  pesan+=`\nTerima kasih\nPT WIJAYA ANUGRAH TEKNIK`;
+  const nomor=hp.value.replace(/^0/,"62");
+  window.open("https://wa.me/"+nomor+"?text="+encodeURIComponent(pesan),"_blank");
 }
 </script>
-
 </body>
 </html>
