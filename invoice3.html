@@ -140,7 +140,7 @@ function tambahItem(){
   const tr=document.createElement("tr");
   tr.innerHTML=`<td><input></td><td><input type="number" value="1"></td>
   <td><input type="number" value="0"></td><td class="line">0</td>
-  <td><button onclick="this.closest('tr').remove();hitung()">oke</button></td>`;
+  <td><button onclick="this.closest('tr').remove();hitung()">✔️</button></td>`;
   document.querySelector("#items tbody").appendChild(tr);
 }
 tambahItem();
@@ -161,7 +161,7 @@ function tambahReport(){
   const tr=document.createElement("tr");
   tr.innerHTML=`<td><input></td><td><input></td><td><input></td>
   <td><input></td><td><input></td>
-  <td><button onclick="this.closest('tr').remove()">oke</button></td>`;
+  <td><button onclick="this.closest('tr').remove()">✔️</button></td>`;
   document.querySelector("#reportAC tbody").appendChild(tr);
 }
 tambahReport();
@@ -233,4 +233,5 @@ a.n Roni Wijaya
 </script>
 </body>
 </html>
+
 
