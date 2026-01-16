@@ -5,63 +5,112 @@
 <title>Invoice & Laporan AC</title>
 
 <style>
-@page{size:A4;margin:25mm 20mm 20mm 20mm}
-body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8}
-
-/* HEADER */
-.print-header{
-position:fixed;top:0;left:0;right:0;height:110px;
-padding:10px 20px;background:#fff;
-border-bottom:3px solid #0d6efd;z-index:1000}
-.header-inner{display:flex;justify-content:space-between;align-items:center}
-.header-inner img{height:70px}
-.company{text-align:right}
-.company h2{margin:0;color:#0d6efd}
-.company p{margin:2px 0;font-size:12px}
+@page{size:A4;margin:20mm}
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:#f4f6f8;
+}
 
 /* DOCUMENT */
 .document{
-width:210mm;margin:auto;background:#fff;
-padding:140px 20px 20px 20px}
+width:210mm;
+margin:auto;
+background:#fff;
+padding:20px;
+}
 
-/* WATERMARK */
-.watermark{
-position:fixed;top:50%;left:50%;
-transform:translate(-50%,-50%) rotate(-30deg);
-font-size:60px;font-weight:bold;
-color:rgba(0,102,204,0.08);
-pointer-events:none}
+/* KOP SURAT SIMPLE */
+.kop{
+display:flex;
+align-items:center;
+gap:15px;
+border-bottom:2px solid #0d6efd;
+padding-bottom:10px;
+margin-bottom:15px;
+}
+.kop img{
+height:65px;
+}
+.kop h2{
+margin:0;
+font-size:18px;
+color:#0d6efd;
+}
+.kop p{
+margin:2px 0;
+font-size:12px;
+}
 
 /* GENERAL */
 h3{text-align:center;margin:15px 0}
-.info{display:flex;justify-content:space-between;font-size:12px}
-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.info{
+display:flex;
+justify-content:space-between;
+font-size:12px;
+margin-bottom:10px;
+}
+table{
+width:100%;
+border-collapse:collapse;
+font-size:12px;
+margin-top:10px;
+}
 table,th,td{border:1px solid #ccc}
-th{background:#0d6efd;color:#fff;padding:6px}
-td{padding:5px;text-align:center}
-input,textarea{width:100%;border:none}
-textarea{border:1px solid #ccc;padding:5px}
+th{
+background:#0d6efd;
+color:#fff;
+padding:6px;
+}
+td{
+padding:5px;
+text-align:center;
+}
+input,textarea{
+width:100%;
+border:none;
+font-size:12px;
+}
+textarea{
+border:1px solid #ccc;
+padding:5px;
+}
 input:focus,textarea:focus{outline:none}
 
 /* TOTAL */
-.totals{width:45%;margin-left:auto;margin-top:15px}
+.totals{
+width:45%;
+margin-left:auto;
+margin-top:15px;
+}
 .totals td{text-align:right}
 
 /* FOTO */
 .photo-grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:10px;margin-top:10px}
+gap:10px;
+margin-top:10px;
+}
 .photo-grid img{
-width:100%;height:auto;object-fit:contain;
-border:1px solid #ccc;padding:4px;background:#fff}
+width:100%;
+height:auto;
+object-fit:contain;
+border:1px solid #ccc;
+padding:4px;
+}
 
 /* PAYMENT */
 .payment{
-display:flex;justify-content:space-between;
-font-size:12px;margin-top:20px}
+display:flex;
+justify-content:space-between;
+font-size:12px;
+margin-top:20px;
+}
 .qris img{
-max-width:130px;border:1px solid #ccc;padding:5px}
+max-width:120px;
+border:1px solid #ccc;
+padding:5px;
+}
 
 /* GARANSI */
 .warranty{
@@ -69,37 +118,55 @@ margin-top:15px;
 padding:10px;
 border:1px dashed #0d6efd;
 font-size:12px;
-background:#f8fbff}
+background:#f8fbff;
+}
 
 /* SIGNATURE */
 .signature{
-width:40%;margin-left:auto;margin-top:40px;
-text-align:center;font-size:12px}
+width:40%;
+margin-left:auto;
+margin-top:40px;
+text-align:center;
+font-size:12px;
+}
 .signature .line{
-margin-top:60px;border-top:1px solid #000}
+margin-top:55px;
+border-top:1px solid #000;
+}
 
 /* ACTION */
-.actions{text-align:center;margin-top:20px}
+.actions{
+text-align:center;
+margin-top:20px;
+}
 button{
-padding:7px 12px;border:none;
-background:#0d6efd;color:#fff;
-cursor:pointer;margin:4px}
+padding:7px 12px;
+border:none;
+background:#0d6efd;
+color:#fff;
+cursor:pointer;
+margin:4px;
+}
 
 @media print{
 .actions{display:none}
 body{background:none}
-.photo-grid img{max-height:160px;page-break-inside:avoid}
+.photo-grid img{
+max-height:160px;
+page-break-inside:avoid;
+}
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="print-header">
-<div class="header-inner">
-<img src="logo.png">
-<div class="company">
+<div class="document">
+
+<!-- KOP SURAT -->
+<div class="kop">
+<img src="./logo.png">
+<div>
 <h2>PT WIJAYA ANUGRAH TEKNIK</h2>
 <p><b>Spesialis Sistem Pendingin</b></p>
 <p>Perbaikan • Perawatan • Pengadaan Unit</p>
@@ -109,39 +176,45 @@ Telp / WA : 0811-8011-436
 </p>
 </div>
 </div>
-</div>
-
-<div class="watermark">PT WIJAYA ANUGRAH TEKNIK</div>
-
-<div class="document">
 
 <!-- INFO -->
 <div class="info">
 <div>
-Nama Customer:<br><input id="custName"><br>
-Alamat:<br><input id="custAddr"><br>
-No. Telp:<br><input id="custPhone">
+Nama Customer:<br><input><br>
+Alamat:<br><input><br>
+No. Telp:<br><input>
 </div>
 <div>
-No Invoice: <b id="invoiceNo"></b><br>
+No Invoice:<br><input><br>
 Tanggal Service:<br>
-<input type="date" id="tanggal">
+<input type="date">
 </div>
 </div>
 
 <!-- LAPORAN -->
 <h3>LAPORAN PEKERJAAN UNIT AC</h3>
-<table id="laporan">
+<table>
 <thead>
 <tr>
-<th>Lokasi</th><th>Merk</th>
-<th>Freon Sblm</th><th>Freon Ssdh</th>
-<th>Amp Sblm</th><th>Amp Ssdh</th><th>keterangan</th>
+<th>Lokasi</th>
+<th>Merk</th>
+<th>Freon Sblm</th>
+<th>Freon Ssdh</th>
+<th>Amp Sblm</th>
+<th>Amp Ssdh</th>
 </tr>
 </thead>
-<tbody></tbody>
+<tbody>
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+</tr>
+</tbody>
 </table>
-<button onclick="addLaporan()">+ Tambah Unit AC</button>
 
 <!-- FOTO -->
 <h3>LAMPIRAN FOTO PEKERJAAN</h3>
@@ -150,35 +223,24 @@ Tanggal Service:<br>
 
 <!-- INVOICE -->
 <h3>RINCIAN INVOICE</h3>
-<table id="items">
+<table>
 <thead>
 <tr>
-<th>Deskripsi</th><th>Qty</th><th>Harga</th><th>Subtotal</th><th>keterangan</th>
+<th>Deskripsi</th>
+<th>Qty</th>
+<th>Harga</th>
+<th>Subtotal</th>
 </tr>
 </thead>
-<tbody></tbody>
-</table>
-<button onclick="addItem()">+ Tambah Item</button>
-
-<table class="totals">
-<tr><td>Subtotal</td><td id="subTotal">0</td></tr>
-<tr><td>Diskon</td><td><input id="diskon" value="0" oninput="calculate()"></td></tr>
+<tbody>
 <tr>
-<td><label><input type="checkbox" id="ppnCheck" onchange="calculate()"> PPN 11%</label></td>
-<td id="ppnValue">0</td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td>0</td>
 </tr>
-<tr><td><b>Grand Total</b></td><td><b id="grandTotal">0</b></td></tr>
+</tbody>
 </table>
-
-<div style="font-size:12px;margin-top:10px">
-<b>Terbilang:</b> <span id="terbilang"></span>
-</div>
-
-<!-- CATATAN -->
-<div style="font-size:12px;margin-top:10px">
-<b>Catatan:</b>
-<textarea id="catatan" rows="3"></textarea>
-</div>
 
 <!-- PAYMENT -->
 <div class="payment">
@@ -190,7 +252,7 @@ A.N : <b>Roni Wijaya</b>
 </div>
 <div class="qris">
 <b>QRIS</b><br><br>
-<img src="qris.jpg">
+<img src="./qris.jpg">
 </div>
 </div>
 
@@ -211,68 +273,12 @@ Manager Finance
 </div>
 
 <div class="actions">
-<button onclick="saveRekap()">💾 Simpan Rekap</button>
-<button onclick="cekRekapBulanan()">📊 Cek Rekapan Bulanan</button>
 <button onclick="window.print()">🖨 Print / PDF</button>
 </div>
 
 </div>
 
 <script>
-/* INVOICE NO */
-(function(){
-let d=new Date(),mm=String(d.getMonth()+1).padStart(2,'0'),yy=d.getFullYear();
-let k="INV_"+mm+yy,n=localStorage.getItem(k)||0;
-n++;localStorage.setItem(k,n);
-invoiceNo.innerText=String(n).padStart(3,"0")+"/INV/WAT/"+mm+"/"+yy;
-tanggal.valueAsDate=new Date();
-})();
-
-/* LAPORAN */
-function addLaporan(){
-let r=document.createElement("tr");
-r.innerHTML=`
-<td><input></td><td><input></td>
-<td><input></td><td><input></td>
-<td><input></td><td><input></td>
-<td><button onclick="this.closest('tr').remove()">✔️</button></td>`;
-laporan.querySelector("tbody").appendChild(r);
-}
-addLaporan();
-
-/* ITEM */
-function addItem(){
-let r=document.createElement("tr");
-r.innerHTML=`
-<td><input></td>
-<td><input type="number" value="1" oninput="calculate()"></td>
-<td><input type="number" value="0" oninput="calculate()"></td>
-<td class="rowTotal">0</td>
-<td><button onclick="this.closest('tr').remove();calculate()">✔️</button></td>`;
-items.querySelector("tbody").appendChild(r);
-}
-addItem();
-
-/* HITUNG */
-function calculate(){
-let sub=0;
-document.querySelectorAll("#items tbody tr").forEach(r=>{
-let q=r.children[1].children[0].value;
-let p=r.children[2].children[0].value;
-let t=q*p;
-r.querySelector(".rowTotal").innerText=t.toLocaleString("id-ID");
-sub+=t;
-});
-subTotal.innerText=sub.toLocaleString("id-ID");
-let d=parseInt(diskon.value||0);
-let ppn=ppnCheck.checked?sub*0.11:0;
-ppnValue.innerText=ppn.toLocaleString("id-ID");
-let g=sub-d+ppn;
-grandTotal.innerText=g.toLocaleString("id-ID");
-terbilang.innerText=terbilangFn(Math.round(g))+" rupiah";
-}
-
-/* FOTO */
 function previewFoto(input){
 let wrap=document.getElementById("photoPreview");
 wrap.innerHTML="";
@@ -281,45 +287,6 @@ let img=document.createElement("img");
 img.src=URL.createObjectURL(f);
 wrap.appendChild(img);
 });
-}
-
-/* SIMPAN REKAP */
-function saveRekap(){
-let data=JSON.parse(localStorage.getItem("REKAP")||"[]");
-data.push({
-tanggal:tanggal.value,
-total:parseInt(grandTotal.innerText.replace(/\D/g,""))||0
-});
-localStorage.setItem("REKAP",JSON.stringify(data));
-alert("Rekap tersimpan");
-}
-
-/* CEK REKAP BULANAN */
-function cekRekapBulanan(){
-let data=JSON.parse(localStorage.getItem("REKAP")||"[]");
-if(data.length===0){alert("Belum ada data");return;}
-let n=new Date(),m=n.getMonth(),y=n.getFullYear(),t=0;
-data.forEach(r=>{
-let d=new Date(r.tanggal);
-if(d.getMonth()===m && d.getFullYear()===y){t+=r.total;}
-});
-let bln=["Januari","Februari","Maret","April","Mei","Juni",
-"Juli","Agustus","September","Oktober","November","Desember"];
-alert("📊 REKAP PENDAPATAN\n\nBulan: "+bln[m]+" "+y+
-"\nTotal: Rp "+t.toLocaleString("id-ID"));
-}
-
-/* TERBILANG */
-function terbilangFn(n){
-const s=["","satu","dua","tiga","empat","lima","enam","tujuh","delapan","sembilan","sepuluh","sebelas"];
-if(n<12)return s[n];
-if(n<20)return s[n-10]+" belas";
-if(n<100)return s[Math.floor(n/10)]+" puluh "+s[n%10];
-if(n<200)return "seratus "+terbilangFn(n-100);
-if(n<1000)return s[Math.floor(n/100)]+" ratus "+terbilangFn(n%100);
-if(n<2000)return "seribu "+terbilangFn(n-1000);
-if(n<1000000)return terbilangFn(Math.floor(n/1000))+" ribu "+terbilangFn(n%1000);
-return "";
 }
 </script>
 
