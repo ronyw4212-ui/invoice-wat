@@ -6,155 +6,71 @@
 
 <style>
 @page{size:A4;margin:20mm}
-body{
-font-family:Arial,Helvetica,sans-serif;
-background:#f4f6f8;
-}
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8}
 
 /* DOCUMENT */
-.document{
-width:210mm;
-margin:auto;
-background:#fff;
-padding:20px;
-}
+.document{width:210mm;margin:auto;background:#fff;padding:20px}
 
-/* KOP SURAT SIMPLE */
+/* KOP */
 .kop{
-display:flex;
-align-items:center;
-gap:15px;
+display:flex;align-items:center;gap:15px;
 border-bottom:2px solid #0d6efd;
-padding-bottom:10px;
-margin-bottom:15px;
-}
-.kop img{
-height:65px;
-}
-.kop h2{
-margin:0;
-font-size:18px;
-color:#0d6efd;
-}
-.kop p{
-margin:2px 0;
-font-size:12px;
-}
+padding-bottom:10px;margin-bottom:15px}
+.kop img{height:65px}
+.kop h2{margin:0;font-size:18px;color:#0d6efd}
+.kop p{margin:2px 0;font-size:12px}
 
 /* GENERAL */
 h3{text-align:center;margin:15px 0}
-.info{
-display:flex;
-justify-content:space-between;
-font-size:12px;
-margin-bottom:10px;
-}
-table{
-width:100%;
-border-collapse:collapse;
-font-size:12px;
-margin-top:10px;
-}
+.info{display:flex;justify-content:space-between;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
 table,th,td{border:1px solid #ccc}
-th{
-background:#0d6efd;
-color:#fff;
-padding:6px;
-}
-td{
-padding:5px;
-text-align:center;
-}
-input,textarea{
-width:100%;
-border:none;
-font-size:12px;
-}
-textarea{
-border:1px solid #ccc;
-padding:5px;
-}
-input:focus,textarea:focus{outline:none}
+th{background:#0d6efd;color:#fff;padding:6px}
+td{padding:5px;text-align:center}
+input{width:100%;border:none;font-size:12px;text-align:center}
+input:focus{outline:none}
 
 /* TOTAL */
-.totals{
-width:45%;
-margin-left:auto;
-margin-top:15px;
-}
+.totals{width:45%;margin-left:auto;margin-top:15px}
 .totals td{text-align:right}
 
 /* FOTO */
 .photo-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-margin-top:10px;
-}
+display:grid;grid-template-columns:repeat(2,1fr);
+gap:10px;margin-top:10px}
 .photo-grid img{
-width:100%;
-height:auto;
-object-fit:contain;
-border:1px solid #ccc;
-padding:4px;
-}
+width:100%;height:auto;object-fit:contain;
+border:1px solid #ccc;padding:4px}
 
 /* PAYMENT */
 .payment{
-display:flex;
-justify-content:space-between;
-font-size:12px;
-margin-top:20px;
-}
-.qris img{
-max-width:120px;
-border:1px solid #ccc;
-padding:5px;
-}
+display:flex;justify-content:space-between;
+font-size:12px;margin-top:20px}
+.qris img{max-width:120px;border:1px solid #ccc;padding:5px}
 
 /* GARANSI */
 .warranty{
-margin-top:15px;
-padding:10px;
+margin-top:15px;padding:10px;
 border:1px dashed #0d6efd;
-font-size:12px;
-background:#f8fbff;
-}
+font-size:12px;background:#f8fbff}
 
-/* SIGNATURE */
+/* SIGN */
 .signature{
-width:40%;
-margin-left:auto;
-margin-top:40px;
-text-align:center;
-font-size:12px;
-}
-.signature .line{
-margin-top:55px;
-border-top:1px solid #000;
-}
+width:40%;margin-left:auto;margin-top:40px;
+text-align:center;font-size:12px}
+.signature .line{margin-top:55px;border-top:1px solid #000}
 
 /* ACTION */
-.actions{
-text-align:center;
-margin-top:20px;
-}
+.actions{text-align:center;margin-top:20px}
 button{
-padding:7px 12px;
-border:none;
-background:#0d6efd;
-color:#fff;
-cursor:pointer;
-margin:4px;
-}
+padding:7px 12px;border:none;
+background:#0d6efd;color:#fff;
+cursor:pointer;margin:4px}
 
 @media print{
 .actions{display:none}
 body{background:none}
-.photo-grid img{
-max-height:160px;
-page-break-inside:avoid;
-}
+.photo-grid img{max-height:160px;page-break-inside:avoid}
 }
 </style>
 </head>
@@ -163,7 +79,7 @@ page-break-inside:avoid;
 
 <div class="document">
 
-<!-- KOP SURAT -->
+<!-- KOP -->
 <div class="kop">
 <img src="./logo.png">
 <div>
@@ -180,14 +96,14 @@ Telp / WA : 0811-8011-436
 <!-- INFO -->
 <div class="info">
 <div>
-Nama Customer:<br><input><br>
-Alamat:<br><input><br>
-No. Telp:<br><input>
+Nama Customer:<br><input id="custName"><br>
+Alamat:<br><input id="custAddr"><br>
+No. Telp:<br><input id="custPhone">
 </div>
 <div>
-No Invoice:<br><input><br>
+No Invoice:<br><input id="invoiceNo"><br>
 Tanggal Service:<br>
-<input type="date">
+<input type="date" id="tanggal">
 </div>
 </div>
 
@@ -196,22 +112,16 @@ Tanggal Service:<br>
 <table>
 <thead>
 <tr>
-<th>Lokasi</th>
-<th>Merk</th>
-<th>Freon Sblm</th>
-<th>Freon Ssdh</th>
-<th>Amp Sblm</th>
-<th>Amp Ssdh</th>
+<th>Lokasi</th><th>Merk</th>
+<th>Freon Sblm</th><th>Freon Ssdh</th>
+<th>Amp Sblm</th><th>Amp Ssdh</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><input></td>
-<td><input></td>
-<td><input></td>
-<td><input></td>
-<td><input></td>
-<td><input></td>
+<td><input></td><td><input></td>
+<td><input></td><td><input></td>
+<td><input></td><td><input></td>
 </tr>
 </tbody>
 </table>
@@ -223,23 +133,40 @@ Tanggal Service:<br>
 
 <!-- INVOICE -->
 <h3>RINCIAN INVOICE</h3>
-<table>
+<table id="invoiceTable">
 <thead>
 <tr>
-<th>Deskripsi</th>
-<th>Qty</th>
-<th>Harga</th>
-<th>Subtotal</th>
+<th>Deskripsi</th><th>Qty</th><th>Harga</th><th>Subtotal</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><input></td>
-<td><input></td>
-<td><input></td>
-<td>0</td>
+<td><input type="number" value="1" oninput="hitung()"></td>
+<td><input type="number" value="0" oninput="hitung()"></td>
+<td class="rowTotal">0</td>
 </tr>
 </tbody>
+</table>
+
+<table class="totals">
+<tr><td>Subtotal</td><td id="subTotal">0</td></tr>
+<tr>
+<td>Diskon</td>
+<td><input type="number" id="diskon" value="0" oninput="hitung()"></td>
+</tr>
+<tr>
+<td>
+<label>
+<input type="checkbox" id="ppnCheck" onchange="hitung()"> Pajak 11%
+</label>
+</td>
+<td id="ppnValue">0</td>
+</tr>
+<tr>
+<td><b>Grand Total</b></td>
+<td><b id="grandTotal">0</b></td>
+</tr>
 </table>
 
 <!-- PAYMENT -->
@@ -259,11 +186,11 @@ A.N : <b>Roni Wijaya</b>
 <!-- GARANSI -->
 <div class="warranty">
 <b>Keterangan Garansi:</b><br>
-• Garansi material <b>30 hari</b> sejak tanggal service<br>
-• Garansi jasa <b>14 hari</b> sejak tanggal service
+• Garansi material <b>30 hari</b><br>
+• Garansi jasa <b>14 hari</b>
 </div>
 
-<!-- SIGNATURE -->
+<!-- SIGN -->
 <div class="signature">
 Hormat Kami,<br>
 <b>PT WIJAYA ANUGRAH TEKNIK</b>
@@ -273,6 +200,7 @@ Manager Finance
 </div>
 
 <div class="actions">
+<button onclick="cekRekapBulanan()">📊 Cek Rekapan Bulanan</button>
 <button onclick="window.print()">🖨 Print / PDF</button>
 </div>
 
@@ -287,6 +215,30 @@ let img=document.createElement("img");
 img.src=URL.createObjectURL(f);
 wrap.appendChild(img);
 });
+}
+
+function hitung(){
+let sub=0;
+document.querySelectorAll("#invoiceTable tbody tr").forEach(r=>{
+let qty=r.children[1].children[0].value;
+let harga=r.children[2].children[0].value;
+let total=qty*harga;
+r.querySelector(".rowTotal").innerText=total.toLocaleString("id-ID");
+sub+=total;
+});
+document.getElementById("subTotal").innerText=sub.toLocaleString("id-ID");
+
+let diskon=parseInt(document.getElementById("diskon").value||0);
+let ppn=document.getElementById("ppnCheck").checked ? sub*0.11 : 0;
+document.getElementById("ppnValue").innerText=ppn.toLocaleString("id-ID");
+
+let grand=sub-diskon+ppn;
+document.getElementById("grandTotal").innerText=grand.toLocaleString("id-ID");
+}
+
+/* REKAP BULANAN */
+function cekRekapBulanan(){
+alert("Rekap bulanan siap – nanti bisa dikembangkan ke dashboard 👍");
 }
 </script>
 
