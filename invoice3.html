@@ -2,141 +2,224 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Invoice & Laporan AC</title>
+<title>Invoice Wijaya AC</title>
+
+<!-- PDF LIB -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-@page{size:A4;margin:20mm}
-body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8}
+@page{size:A4 portrait;margin:20mm}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f6f8;
+}
 
-/* DOCUMENT */
-.document{width:210mm;margin:auto;background:#fff;padding:20px}
+/* ================= DOCUMENT ================= */
+.document{
+  width:210mm;
+  margin:20px auto;
+  background:#fff;
+  padding:20px;
+  box-sizing:border-box;
+}
 
-/* KOP */
+/* ================= KOP ================= */
 .kop{
-display:flex;align-items:center;gap:15px;
-border-bottom:2px solid #0d6efd;
-padding-bottom:10px;margin-bottom:15px}
+  display:flex;
+  gap:15px;
+  border-bottom:2px solid #0d6efd;
+  padding-bottom:10px;
+  margin-bottom:15px;
+}
 .kop img{height:65px}
 .kop h2{margin:0;font-size:18px;color:#0d6efd}
 .kop p{margin:2px 0;font-size:12px}
 
-/* GENERAL */
+/* ================= GENERAL ================= */
 h3{text-align:center;margin:15px 0}
 .info{display:flex;justify-content:space-between;font-size:12px}
-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
-table,th,td{border:1px solid #ccc}
-th{background:#0d6efd;color:#fff;padding:6px}
-td{padding:5px;text-align:center}
-input{width:100%;border:none;font-size:12px;text-align:center}
-input:focus{outline:none}
 
-/* TOTAL */
-.totals{width:45%;margin-left:auto;margin-top:15px}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  margin-top:10px;
+}
+table,th,td{border:1px solid #ccc}
+th{
+  background:#0d6efd;
+  color:#fff;
+  padding:6px;
+}
+td{
+  padding:4px;
+  vertical-align:middle;
+}
+
+/* ================= INPUT ================= */
+input{
+  width:100%;
+  height:28px;
+  padding:4px 6px;
+  font-size:12px;
+  border:none;
+  box-sizing:border-box;
+  background:transparent;
+}
+input[type="text"]{text-align:left}
+input[type="number"]{text-align:right}
+input:focus{
+  outline:none;
+  background:#f5f9ff;
+}
+
+/* ================= COLUMN WIDTH ================= */
+.col-qty{width:60px}
+.col-price{width:90px}
+.col-sub{width:110px}
+.col-del{width:30px}
+
+/* ================= DELETE ================= */
+.del{
+  text-align:center;
+  font-size:16px;
+  font-weight:bold;
+  color:#dc3545;
+  cursor:pointer;
+}
+
+/* ================= TOTAL ================= */
+.totals{
+  width:45%;
+  margin-left:auto;
+  margin-top:15px;
+}
 .totals td{text-align:right}
 
-/* FOTO */
-.photo-grid{
-display:grid;grid-template-columns:repeat(2,1fr);
-gap:10px;margin-top:10px}
-.photo-grid img{
-width:100%;height:auto;object-fit:contain;
-border:1px solid #ccc;padding:4px}
+/* ================= PAYMENT & NOTE ================= */
+.payment{font-size:12px;margin-top:20px}
+.note{
+  margin-top:15px;
+  font-size:12px;
+  border:1px dashed #0d6efd;
+  padding:10px;
+}
 
-/* PAYMENT */
-.payment{
-display:flex;justify-content:space-between;
-font-size:12px;margin-top:20px}
-.qris img{max-width:120px;border:1px solid #ccc;padding:5px}
-
-/* GARANSI */
-.warranty{
-margin-top:15px;padding:10px;
-border:1px dashed #0d6efd;
-font-size:12px;background:#f8fbff}
-
-/* SIGN */
+/* ================= SIGN ================= */
 .signature{
-width:40%;margin-left:auto;margin-top:40px;
-text-align:center;font-size:12px}
-.signature .line{margin-top:55px;border-top:1px solid #000}
+  width:40%;
+  margin-left:auto;
+  margin-top:35px;
+  text-align:center;
+  font-size:12px;
+}
+.signature .line{
+  margin-top:50px;
+  border-top:1px solid #000;
+}
 
-/* ACTION */
-.actions{text-align:center;margin-top:20px}
+/* ================= FOTO ================= */
+.photo-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.photo-grid img{
+  width:100%;
+  border:1px solid #ccc;
+  padding:4px;
+}
+
+/* ================= ACTION ================= */
+.actions{text-align:center;margin:15px}
 button{
-padding:7px 12px;border:none;
-background:#0d6efd;color:#fff;
-cursor:pointer;margin:4px}
+  padding:7px 14px;
+  background:#0d6efd;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
 
+/* ================= PAGE BREAK ================= */
+.page-break{page-break-before:always}
+
+/* ================= PRINT ================= */
 @media print{
-.actions{display:none}
-body{background:none}
-.photo-grid img{max-height:160px;page-break-inside:avoid}
+  .actions,input[type=file]{display:none}
+  body{background:none}
 }
 </style>
 </head>
 
-<body>
+<body onload="initInvoice()">
 
+<div class="actions">
+<button onclick="generatePDF()">📄 Generate PDF</button>
+</div>
+
+<div id="invoice-view">
+
+<!-- ================= HALAMAN 1 ================= -->
 <div class="document">
 
-<!-- KOP -->
 <div class="kop">
 <img src="./logo.png">
 <div>
 <h2>PT WIJAYA ANUGRAH TEKNIK</h2>
 <p><b>Spesialis Sistem Pendingin</b></p>
-<p>Perbaikan • Perawatan • Pengadaan Unit</p>
 <p style="font-size:11px">
-JL. H Rean Benda Baru Pamulang, Tangerang Selatan<br>
-Telp / WA : 0811-8011-436
+Jl. H Rean Pamulang – Tangerang Selatan<br>
+WA : 0811-8011-436
 </p>
 </div>
 </div>
 
-<!-- INFO -->
 <div class="info">
 <div>
-Nama Customer:<br><input id="custName"><br>
-Alamat:<br><input id="custAddr"><br>
-No. Telp:<br><input id="custPhone">
+Nama Customer:<br><input type="text"><br>
+Alamat:<br><input type="text"><br>
+No Telp:<br><input type="text">
 </div>
 <div>
-No Invoice:<br><input id="invoiceNo"><br>
-Tanggal Service:<br>
-<input type="date" id="tanggal">
+No Invoice:<br><input id="invoiceNo" readonly><br>
+Tanggal:<br><input type="date" id="tanggal">
 </div>
 </div>
 
-<!-- LAPORAN -->
-<h3>LAPORAN PEKERJAAN UNIT AC</h3>
+<h3>LAPORAN PEKERJAAN</h3>
 <table>
 <thead>
 <tr>
 <th>Lokasi</th><th>Merk</th>
 <th>Freon Sblm</th><th>Freon Ssdh</th>
 <th>Amp Sblm</th><th>Amp Ssdh</th>
+<th class="col-del"></th>
 </tr>
 </thead>
-<tbody>
+<tbody id="laporanBody">
 <tr>
 <td><input></td><td><input></td>
 <td><input></td><td><input></td>
 <td><input></td><td><input></td>
+<td class="del" onclick="hapus(this)"></td>
 </tr>
 </tbody>
 </table>
 
-<!-- FOTO -->
-<h3>LAMPIRAN FOTO PEKERJAAN</h3>
-<input type="file" multiple accept="image/*" onchange="previewFoto(this)">
-<div class="photo-grid" id="photoPreview"></div>
+<div class="actions">
+<button onclick="tambahUnit()">➕ Tambah Unit</button>
+</div>
 
-<!-- INVOICE -->
 <h3>RINCIAN INVOICE</h3>
 <table id="invoiceTable">
 <thead>
 <tr>
-<th>Deskripsi</th><th>Qty</th><th>Harga</th><th>Subtotal</th>
+<th>Deskripsi</th>
+<th class="col-qty">Qty</th>
+<th class="col-price">Harga</th>
+<th class="col-sub">Subtotal</th>
+<th class="col-del"></th>
 </tr>
 </thead>
 <tbody>
@@ -145,100 +228,131 @@ Tanggal Service:<br>
 <td><input type="number" value="1" oninput="hitung()"></td>
 <td><input type="number" value="0" oninput="hitung()"></td>
 <td class="rowTotal">0</td>
+<td class="del" onclick="hapus(this);hitung()"></td>
 </tr>
 </tbody>
 </table>
 
+<div class="actions">
+<button onclick="tambahItem()">➕ Tambah Item</button>
+</div>
+
 <table class="totals">
 <tr><td>Subtotal</td><td id="subTotal">0</td></tr>
+<tr><td>Diskon</td><td><input type="number" id="diskon" value="0" oninput="hitung()"></td></tr>
 <tr>
-<td>Diskon</td>
-<td><input type="number" id="diskon" value="0" oninput="hitung()"></td>
+<td><input type="checkbox" id="ppn" onchange="hitung()"> Pajak 11%</td>
+<td id="ppnVal">0</td>
 </tr>
-<tr>
-<td>
-<label>
-<input type="checkbox" id="ppnCheck" onchange="hitung()"> Pajak 11%
-</label>
-</td>
-<td id="ppnValue">0</td>
-</tr>
-<tr>
-<td><b>Grand Total</b></td>
-<td><b id="grandTotal">0</b></td>
-</tr>
+<tr><td><b>Grand Total</b></td><td><b id="grandTotal">0</b></td></tr>
 </table>
 
-<!-- PAYMENT -->
 <div class="payment">
-<div>
-<b>Pembayaran:</b><br><br>
-Transfer Bank BCA<br>
-No. Rek : <b>2190116851</b><br>
-A.N : <b>Roni Wijaya</b>
-</div>
-<div class="qris">
-<b>QRIS</b><br><br>
-<img src="./qris.jpg">
-</div>
+<b>Pembayaran:</b><br>
+BCA 2190116851<br>
+A/N PT WIJAYA ANUGRAH TEKNIK
 </div>
 
-<!-- GARANSI -->
-<div class="warranty">
-<b>Keterangan Garansi:</b><br>
-• Garansi material <b>30 hari</b><br>
-• Garansi jasa <b>14 hari</b>
+<div class="note">
+<b>Catatan:</b><br>
+Garansi jasa 14 hari • Sparepart 30 hari
 </div>
 
-<!-- SIGN -->
 <div class="signature">
 Hormat Kami,<br>
-<b>PT WIJAYA ANUGRAH TEKNIK</b>
+PT WIJAYA ANUGRAH TEKNIK
 <div class="line"></div>
-<b>Bani Wijaya</b><br>
-Manager Finance
+Bani Wijaya
 </div>
 
+</div>
+
+<!-- ================= HALAMAN 2 ================= -->
+<div class="document page-break">
+<h3>LAMPIRAN DOKUMENTASI PEKERJAAN</h3>
+
 <div class="actions">
-<button onclick="cekRekapBulanan()">📊 Cek Rekapan Bulanan</button>
-<button onclick="window.print()">🖨 Print / PDF</button>
+<input type="file" multiple accept="image/*" onchange="previewFoto(this)">
+</div>
+
+<div id="photoPrint" class="photo-grid"></div>
 </div>
 
 </div>
 
 <script>
-function previewFoto(input){
-let wrap=document.getElementById("photoPreview");
-wrap.innerHTML="";
-[...input.files].forEach(f=>{
-let img=document.createElement("img");
-img.src=URL.createObjectURL(f);
-wrap.appendChild(img);
-});
+function initInvoice(){
+  let d=new Date();
+  let b=String(d.getMonth()+1).padStart(2,"0");
+  let t=d.getFullYear();
+  let key="INV_"+b+t;
+  let n=parseInt(localStorage.getItem(key)||0)+1;
+  localStorage.setItem(key,n);
+  invoiceNo.value=String(n).padStart(3,"0")+"/INV/WAT/"+b+"/"+t;
+  tanggal.value=d.toISOString().slice(0,10);
 }
+
+function tambahUnit(){
+  laporanBody.insertAdjacentHTML("beforeend",`
+  <tr>
+    <td><input></td><td><input></td>
+    <td><input></td><td><input></td>
+    <td><input></td><td><input></td>
+    <td class="del" onclick="hapus(this)"></td>
+  </tr>`);
+}
+
+function tambahItem(){
+  document.querySelector("#invoiceTable tbody")
+  .insertAdjacentHTML("beforeend",`
+  <tr>
+    <td><input></td>
+    <td><input type="number" value="1" oninput="hitung()"></td>
+    <td><input type="number" value="0" oninput="hitung()"></td>
+    <td class="rowTotal">0</td>
+    <td class="del" onclick="hapus(this);hitung()"></td>
+  </tr>`);
+}
+
+function hapus(el){el.parentElement.remove()}
 
 function hitung(){
-let sub=0;
-document.querySelectorAll("#invoiceTable tbody tr").forEach(r=>{
-let qty=r.children[1].children[0].value;
-let harga=r.children[2].children[0].value;
-let total=qty*harga;
-r.querySelector(".rowTotal").innerText=total.toLocaleString("id-ID");
-sub+=total;
-});
-document.getElementById("subTotal").innerText=sub.toLocaleString("id-ID");
-
-let diskon=parseInt(document.getElementById("diskon").value||0);
-let ppn=document.getElementById("ppnCheck").checked ? sub*0.11 : 0;
-document.getElementById("ppnValue").innerText=ppn.toLocaleString("id-ID");
-
-let grand=sub-diskon+ppn;
-document.getElementById("grandTotal").innerText=grand.toLocaleString("id-ID");
+  let sub=0;
+  document.querySelectorAll("#invoiceTable tbody tr").forEach(r=>{
+    let q=r.children[1].children[0].value||0;
+    let h=r.children[2].children[0].value||0;
+    let t=q*h;
+    r.querySelector(".rowTotal").innerText=t.toLocaleString("id-ID");
+    sub+=t;
+  });
+  subTotal.innerText=sub.toLocaleString("id-ID");
+  let d=parseInt(diskon.value||0);
+  let p=ppn.checked?sub*0.11:0;
+  ppnVal.innerText=p.toLocaleString("id-ID");
+  grandTotal.innerText=(sub-d+p).toLocaleString("id-ID");
 }
 
-/* REKAP BULANAN */
-function cekRekapBulanan(){
-alert("Rekap bulanan siap – nanti bisa dikembangkan ke dashboard 👍");
+function previewFoto(input){
+  photoPrint.innerHTML="";
+  [...input.files].forEach(f=>{
+    let u=URL.createObjectURL(f);
+    photoPrint.innerHTML+=`<img src="${u}">`;
+  });
+}
+
+async function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  const pdf=new jsPDF("p","mm","a4");
+  const pages=document.querySelectorAll(".document");
+
+  for(let i=0;i<pages.length;i++){
+    const canvas=await html2canvas(pages[i],{scale:2,useCORS:true});
+    const img=canvas.toDataURL("image/png");
+    if(i>0) pdf.addPage();
+    pdf.addImage(img,"PNG",0,0,210,297);
+  }
+
+  pdf.save(invoiceNo.value.replaceAll("/","-")+".pdf");
 }
 </script>
 
